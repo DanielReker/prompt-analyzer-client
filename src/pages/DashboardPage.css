@@ -1,0 +1,330 @@
+/* DashboardPage Styles */
+
+/* Animations */
+@keyframes loading {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Main Layout */
+.dashboard-main-content {
+  flex: 1;
+  margin-right: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+@media (min-width: 960px) {
+  .dashboard-main-content {
+    margin-right: 300px;
+    padding: 32px;
+  }
+}
+
+/* Loading State */
+.dashboard-loading-content {
+  flex: 1;
+  margin-right: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+@media (min-width: 960px) {
+  .dashboard-loading-content {
+    margin-right: 300px;
+    padding: 32px;
+  }
+}
+
+.dashboard-loading-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 32px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 12px;
+  background-color: #fffbe7;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+  gap: 8px;
+  justify-content: center;
+}
+
+.dashboard-loading-icon {
+  color: #ff9800;
+  font-size: 28px;
+}
+
+.dashboard-loading-title {
+  font-weight: 700;
+  color: #ff9800;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.dashboard-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.dashboard-loading-main-icon {
+  font-size: 60px;
+  color: #ff9800;
+  animation: pulse 2s infinite;
+}
+
+.dashboard-loading-main-title {
+  color: #ff9800;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+@media (min-width: 600px) {
+  .dashboard-loading-main-title {
+    font-size: 2rem;
+  }
+}
+
+.dashboard-loading-subtitle {
+  color: #666;
+  text-align: center;
+  max-width: 400px;
+  margin: 0;
+}
+
+.dashboard-loading-progress-container {
+  width: 200px;
+  height: 4px;
+  background-color: #ffe0b2;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dashboard-loading-progress-bar {
+  width: 100%;
+  height: 100%;
+  background-color: #ff9800;
+  border-radius: 8px;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+/* Error State */
+.dashboard-error-content {
+  flex: 1;
+  margin-right: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+@media (min-width: 960px) {
+  .dashboard-error-content {
+    margin-right: 300px;
+    padding: 32px;
+  }
+}
+
+.dashboard-error-paper {
+  padding: 32px;
+  text-align: center;
+  border-radius: 16px;
+  max-width: 400px;
+  background-color: #fff;
+  box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12);
+}
+
+.dashboard-error-title {
+  color: #d32f2f;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-top: 0;
+}
+
+.dashboard-error-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+.dashboard-error-button {
+  padding: 8px 16px;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.dashboard-error-button:hover {
+  background: #f57c00;
+}
+
+/* Header Bar */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border-radius: 12px;
+  background-color: #fffbe7;
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+  gap: 8px;
+  justify-content: center;
+}
+
+.dashboard-header-icon {
+  color: #ff9800;
+  font-size: 28px;
+}
+
+.dashboard-header-title {
+  font-weight: 700;
+  color: #ff9800;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+/* Motivational Message */
+.dashboard-motivational-message {
+  font-weight: 600;
+  color: #ff9800;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-top: 0;
+}
+
+/* Decorative Icon Container */
+.dashboard-decorative-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dashboard-decorative-icon {
+  font-size: 40px;
+  color: #ffd54f;
+}
+
+/* Task Content Paper */
+.dashboard-task-paper {
+  width: 100%;
+  max-width: 700px;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: #fff;
+  border: 2px solid #ffe0b2;
+  box-shadow: 0 4px 24px 0 rgba(255, 224, 130, 0.33);
+  margin-top: 8px;
+}
+
+@media (min-width: 960px) {
+  .dashboard-task-paper {
+    padding: 32px;
+    margin-top: 0;
+  }
+}
+
+.dashboard-task-title {
+  font-size: 1.1rem;
+  margin: 0 0 16px 0;
+  font-weight: 500;
+}
+
+@media (min-width: 960px) {
+  .dashboard-task-title {
+    font-size: 1.25rem;
+  }
+}
+
+.dashboard-task-question {
+  margin: 16px 0;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 960px) {
+  .dashboard-task-question {
+    font-size: 1rem;
+  }
+}
+
+/* Task Images Container */
+.dashboard-task-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+@media (min-width: 960px) {
+  .dashboard-task-images {
+    gap: 16px;
+  }
+}
+
+.dashboard-task-image-container {
+  width: 100%;
+  position: relative;
+}
+
+@media (min-width: 600px) {
+  .dashboard-task-image-container {
+    width: calc(50% - 4px);
+  }
+}
+
+@media (min-width: 960px) {
+  .dashboard-task-image-container {
+    width: calc(33.33% - 10px);
+  }
+}
+
+/* No Tasks State */
+.dashboard-no-tasks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.dashboard-no-tasks-text {
+  margin: 0;
+} 

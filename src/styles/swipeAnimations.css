@@ -1,0 +1,158 @@
+@keyframes swipeHint {
+    0%, 100% { transform: translateX(0); opacity: 0.5; }
+    50% { transform: translateX(10px); opacity: 1; }
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+  }
+  
+  .swipe-container {
+    touch-action: pan-y; /* Allow vertical scroll, capture horizontal */
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  .swipe-active {
+    cursor: grabbing;
+    transition: none;
+  }
+  
+  .hint-pulse {
+    animation: pulseGlow 2s infinite;
+  }
+  
+  /* Swipe instruction overlay */
+  .swipe-instructions {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 5;
+    animation: fadeInOut 4s ease-in-out;
+  }
+  
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    20%, 80% { opacity: 1; }
+  }
+  
+  /* Pulse animation for mobile task card instructions */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  .mobile-task-card {
+    touch-action: pan-y; /* Allow vertical scrolling but capture horizontal swipes */
+  }
+  
+  /* Swipe feedback animations */
+  .swipe-feedback-left {
+    animation: swipeLeft 0.3s ease-out;
+  }
+  
+  .swipe-feedback-right {
+    animation: swipeRight 0.3s ease-out;
+  }
+  
+  .swipe-feedback-up {
+    animation: swipeUp 0.3s ease-out;
+  }
+  
+  @keyframes swipeLeft {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes swipeRight {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes swipeUp {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  
+  /* Swipe indicator animations */
+  .swipe-indicator {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+    transition: all 0.2s ease;
+  }
+  
+  .swipe-indicator-left {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .swipe-indicator-right {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .swipe-indicator-up {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Enhanced mobile-specific styles */
+  .mobile-dashboard-container {
+    overscroll-behavior: contain;
+    -webkit-overscroll-behavior: contain;
+  }
+  
+  /* Safe area handling for devices with notches */
+  @supports (padding: max(0px)) {
+    .mobile-dashboard-container {
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+  }
+  
+  /* Smooth scrolling for swipe containers */
+  .swipe-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent text selection during swipes */
+  .swipe-no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Optimize performance for swipe animations */
+  .swipe-optimized {
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Custom haptic feedback visual indicator */
+  .haptic-feedback {
+    animation: hapticPulse 0.1s ease-out;
+  }
+  
+  @keyframes hapticPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }

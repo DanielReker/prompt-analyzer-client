@@ -1,187 +1,241 @@
-// @ts-nocheck
-
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
-    Box,
-    Button,
-    Container,
-    TextField,
-    Typography,
-    Paper, createTheme, ThemeProvider, CssBaseline,
+    createTheme, 
+    ThemeProvider, 
+    CssBaseline, 
 } from '@mui/material';
-import {QueryClient, QueryClientProvider, useMutation, useQuery} from '@tanstack/react-query';
-import axios from 'axios';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Layout from './components/Layout';
+import SecurityHeaders from './components/SecurityHeaders';
+import { StreakProvider } from './contexts/StreakContext';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import ResultsPage from './pages/ResultsPage';
+import ImageGenerationDashboard from './pages/ImageGenerationDashboard';
+import ImageGenerationTask from './pages/ImageGenerationTask';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import CalendarPage from './pages/CalendarPage.tsx';
+import TaskPage from './pages/TaskPage';
+import ProfilePage from './pages/ProfilePage';
 
-function countNonWhitespaceCharacters(str: string) {
-    const strWithoutWhitespace = str.replace(/\s/g, "");
-    return strWithoutWhitespace.length;
-}
-
-const convertArrayToObject = (array, key) => {
-    const initialValue = {};
-    return array.reduce((obj, item) => {
-        return {
-            ...obj,
-            [item[key]]: item,
-        };
-    }, initialValue);
-};
-
-
-const API_BASE = 'https://danielreker.duckdns.org/api/analyzer';
-
+// Theme
 const theme = createTheme({
-    colorSchemes: {
-        dark: true,
+    palette: {
+        mode: 'light',
+        primary: {
+            main: '#ff9800',
+        },
+        background: {
+            default: '#f4f6fa',
+        },
     },
-    shape: {
-        borderRadius: 12
+    shape: { borderRadius: 12 },
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1280,
+            xl: 1920,
+        },
     },
 });
 
-
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: (failureCount, error: unknown) => {
+                // Don't retry on 401/403 errors (authentication issues)
+                if (typeof error === 'object' && 
+                    error !== null && 
+                    'response' in error) {
+                    const axiosError = error as { response?: { status?: number } };
+                    if (axiosError.response?.status === 401 || axiosError.response?.status === 403) {
+                        return false;
+                    }
+                }
+                return failureCount < 3;
+            },
+            staleTime: 5 * 60 * 1000, // 5 minutes
+        },
+    },
+});
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline enableColorScheme/>
+            <SecurityHeaders />
             <QueryClientProvider client={queryClient}>
-                <Application />
+                <StreakProvider>
+                    <Router>
+                        <Routes>
+                            <Route 
+                                path="/" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return <LoginPage onUserLogin={props.onUserLogin} />;
+                                            }
+                                            return null;
+                                        }}
+                                    </Layout>
+                                } 
+                            />
+                            <Route 
+                                path="/login" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return <LoginPage onUserLogin={props.onUserLogin} />;
+                                            }
+                                            return null;
+                                        }}
+                                    </Layout>
+                                } 
+                            />
+                            <Route 
+                                path="/dashboard" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <DashboardPage 
+                                                    userId={props.userId} 
+                                                    name={props.name} 
+                                                />
+                                            );
+                                        }}
+                                    </Layout>
+                                } 
+                            />
+                            <Route 
+                                path="/results" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <ResultsPage 
+                                                    userId={props.userId} 
+                                                />
+                                            );
+                                        }}
+                                    </Layout>
+                                } 
+                            />
+                            <Route 
+                                path="/image-generation" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <ImageGenerationDashboard />
+                                            );
+                                        }}
+                                    </Layout>
+                                } 
+                            />
+                            <Route 
+                                path="/image-generation/task/:taskId" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <ImageGenerationTask />
+                                            );
+                                        }}
+                                    </Layout>
+                                } 
+                            />
+                            <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="/reset-password" element={<ResetPassword />} />
+                            <Route 
+                                path="/calendar" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <CalendarPage 
+                                                    userId={props.userId}
+                                                />
+                                            );
+                                        }}
+                                    </Layout>
+                                }
+                            />
+                            <Route 
+                                path="/task/:taskId" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <TaskPage 
+                                                    userId={props.userId} 
+                                                    name={props.name} 
+                                                />
+                                            );
+                                        }}
+                                    </Layout>
+                                }
+                            />
+                            <Route 
+                                path="/profile" 
+                                element={
+                                    <Layout>
+                                        {(props) => {
+                                            if ('onUserLogin' in props) {
+                                                return null; // This shouldn't happen due to redirects
+                                            }
+                                            return (
+                                                <ProfilePage 
+                                                    userId={props.userId}
+                                                    onLogout={props.onLogout}
+                                                />
+                                            );
+                                        }}
+                                    </Layout>
+                                }
+                            />
+                        </Routes>
+                    </Router>
+                </StreakProvider>
             </QueryClientProvider>
-        </ThemeProvider>
-    )
-}
-
-function Application() {
-    const [userId, setUserId] = useState<string | null>(null);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
-    const [userSolutions, setUserSolutions] = useState<Record<string, string>>({});
-    const [checkingResults, setCheckingResults] = useState(false);
-
-    const createUser = useMutation({
-        mutationFn: (data: { name: string; email: string }) =>
-            axios.post(`${API_BASE}/users`, data).then((res) => res.data),
-        onSuccess: (data) => {
-            setUserId(data.id);
-        },
-    });
-
-    const tasksQuery = useQuery({
-        queryKey: ['tasks', userId],
-        queryFn: () => axios.get(`${API_BASE}/users/${userId}/tasks`).then((res) => res.data.data),
-        enabled: !!userId,
-    });
-
-    let tasksMap = null;
-    if (tasksQuery?.data) {
-        tasksMap = convertArrayToObject(tasksQuery.data, 'id');
-    }
-
-    const criteriaQuery = useQuery({
-        queryKey: ['criteria'],
-        queryFn: () => axios.get(`${API_BASE}/criteria`).then((res) => convertArrayToObject(res.data.data, 'id')),
-        enabled: true,
-    });
-
-    const submitSolution = useMutation({
-        mutationFn: ({ taskId, solutionPrompt }: { taskId: string; solutionPrompt: string }) =>
-            axios.post(`${API_BASE}/users/${userId}/submissions`, { taskId, solutionPrompt }),
-        onSuccess: () => {
-            setCurrentTaskIndex((prev) => prev + 1);
-        },
-    });
-
-    const resultsQuery = useQuery({
-        queryKey: ['results', userId],
-        queryFn: () => axios.get(`${API_BASE}/users/${userId}/results`).then((res) => res.data),
-        enabled: checkingResults,
-        refetchInterval: () => 2000,
-    });
-
-    const SOLUTION_MIN_NON_WHITESPACE_CHARACTERS = 10;
-
-    const handleSolutionSubmit = () => {
-        const task = tasksQuery.data?.[currentTaskIndex];
-        if (task) {
-            submitSolution.mutate({
-                taskId: task.id,
-                solutionPrompt: userSolutions[task.id] || '',
-            });
-        }
-    };
-
-    if (!userId) {
-        return (
-            <Container sx={{ mt: 4 }}>
-                <Typography variant="h5" gutterBottom>
-                    Welcome! Enter your info to begin:
-                </Typography>
-                <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <TextField label="Name" fullWidth margin="normal" value={name} onChange={(e) => setName(e.target.value)} />
-                <Button variant="contained" onClick={() => createUser.mutate({ email, name })}>
-                    Start
-                </Button>
-            </Container>
-        );
-    }
-
-    if (currentTaskIndex >= tasksQuery.data?.length) {
-        return (
-            <Container sx={{ mt: 4 }}>
-                <Typography variant="h6">All tasks submitted!</Typography>
-                <Button variant="contained" onClick={() => setCheckingResults(true)}>
-                    Check My Score
-                </Button>
-                {criteriaQuery.data && resultsQuery.data && resultsQuery.data.score !== null && (
-                    <Box mt={4}>
-                        <Typography variant="h5">Final Score: {resultsQuery.data.score.toFixed(2)}</Typography>
-                        {resultsQuery.data.taskResults.map((task) => (
-                            <Paper key={task.taskId} sx={{ p: 2, mt: 2 }}>
-                                <Typography variant="h6">Task: {tasksMap ? tasksMap[task.taskId].name : task.taskId}</Typography>
-                                {task.criterionResults.map((criterion) => (
-                                    <Box key={criterion.criterionId} mt={1}>
-                                        <Typography><strong>{!criteriaQuery.data ? criterion.criterionId : criteriaQuery.data[criterion.criterionId].name}</strong>: {criterion.score}</Typography>
-                                        {criterion.subquestionResults.map((sub) => (
-                                            <Typography key={sub.subquestionId} sx={{ pl: 2 }}>
-                                                - {sub.feedback} (Score: {sub.score})
-                                            </Typography>
-                                        ))}
-                                    </Box>
-                                ))}
-                            </Paper>
-                        ))}
-                    </Box>
-                )}
-            </Container>
-        );
-    }
-
-    const task = tasksQuery.data?.[currentTaskIndex];
-
-    const userSolution = userSolutions[task?.id] || '';
-
-    return (
-        <Container sx={{ mt: 4 }}>
-            <Typography variant="h6">Task {currentTaskIndex + 1}: {task?.name}</Typography>
-            <Typography component="p" sx={{ my: 2 }}>{task?.question}</Typography>
-            <TextField
-                label="Your Prompt"
-                multiline
-                fullWidth
-                minRows={3}
-                value={userSolution}
-                placeholder={`Write at least ${SOLUTION_MIN_NON_WHITESPACE_CHARACTERS} letters or digits`}
-                onChange={(e) =>
-                    setUserSolutions({ ...userSolutions, [task?.id]: e.target.value })
-                }
+            <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
             />
-            <Button sx={{ mt: 2 }} variant="contained" onClick={handleSolutionSubmit} disabled={countNonWhitespaceCharacters(userSolution) < SOLUTION_MIN_NON_WHITESPACE_CHARACTERS}>
-                Submit Solution
-            </Button>
-        </Container>
+        </ThemeProvider>
     );
 }
 
